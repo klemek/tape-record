@@ -14,7 +14,7 @@ help: ## show this message
 print-%:
 	@echo -e '\033[32m$*\033[0m = $($*)'
 
-node_modules: package-lock.json
+node_modules: bun.lock
 	@$(BUN) install
 
 build: node_modules ## build static site in "dist"
