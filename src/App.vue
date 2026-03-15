@@ -19,9 +19,11 @@ const canStop = computed<boolean>(() => ready.value && playing.value);
 
 function onChangeFile(event: Event): void {
     ready.value = false;
-    file.value = URL.createObjectURL(
-        (event.target as HTMLInputElement).files![0] as File,
-    );
+    const eventFiles = (event.target as HTMLInputElement).files;
+    if (!eventFiles?.length || !eventFiles[0]) {
+        return;
+    }
+    file.value = URL.createObjectURL(eventFiles[0]);
     audio.value = new Audio(file.value);
     audio.value.addEventListener("loadeddata", onAudioLoadedData);
     audio.value.addEventListener("ended", onAudioEnded);
