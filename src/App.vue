@@ -17,10 +17,10 @@ const startedDate = ref<Date | null>(null);
 const canPlay = computed<boolean>(() => ready.value && !playing.value);
 const canStop = computed<boolean>(() => ready.value && playing.value);
 
-function onChangeFile(event: InputEvent): void {
+function onChangeFile(event: Event): void {
     ready.value = false;
     file.value = URL.createObjectURL(
-        (event.target as HTMLInputElement).files[0],
+        (event.target as HTMLInputElement).files![0] as File,
     );
     audio.value = new Audio(file.value);
     audio.value.addEventListener("loadeddata", onAudioLoadedData);
@@ -76,7 +76,7 @@ function getRemaining(): string {
     if (ended.value) {
         return "00:00";
     }
-    if (!ready.value || !playing.value) {
+    if (!ready.value || !playing.value || !startedDate.value || !audio.value) {
         return "00:05";
     }
     const d1 = Math.floor(
@@ -133,7 +133,7 @@ onMounted(() => {
                 <LucideIcon name="square" /> Stop
             </button>
         </div>
-        <h1 :id="rid" :title="rid" :style="{ color: color }">
+        <h1 :id="rid" :title="rid" :style="{ color: color ?? '' }">
             {{ remaining }}
         </h1>
         <hr />
